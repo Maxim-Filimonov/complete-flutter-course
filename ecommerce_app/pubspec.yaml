@@ -20,6 +20,7 @@ dependencies:
   flutter_riverpod: ^2.4.10
   shimmer: ^3.0.0
   flutter_content_placeholder: ^0.0.1
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
