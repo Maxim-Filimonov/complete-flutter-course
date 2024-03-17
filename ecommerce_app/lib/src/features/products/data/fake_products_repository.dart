@@ -4,29 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FakeProductsRepository {
+  FakeProductsRepository({this.delay = const Duration(seconds: 2)});
+
   final List<Product> _products = kTestProducts;
+  final Duration delay;
 
   List<Product> getProductsList() {
     return _products;
   }
 
   Product? getProduct(String id) {
-    return _products.firstWhere((product) => product.id == id);
+    return _getProductOrNull(_products, id);
+  }
+
+  Product? _getProductOrNull(List<Product> products, String id) {
+    try {
+      return products.firstWhere((product) => product.id == id);
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<List<Product>> fetchProductsList() async {
-    await Future.delayed(const Duration(seconds: 2));
+    // if not in test mode
+    await Future.delayed(delay);
     return Future.value(_products);
   }
 
   Stream<List<Product>> watchProductsList() async* {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(delay);
     yield _products;
   }
 
   Stream<Product?> watchProduct(String id) {
     return watchProductsList()
-        .map((products) => products.firstWhere((product) => product.id == id));
+        .map((products) => _getProductOrNull(products, id));
   }
 }
 

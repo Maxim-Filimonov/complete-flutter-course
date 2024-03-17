@@ -117,3 +117,7 @@ firebase-exports
 .env.dev
 .env.stg
 .env.prod
+
+
+# coverage
+coverage/

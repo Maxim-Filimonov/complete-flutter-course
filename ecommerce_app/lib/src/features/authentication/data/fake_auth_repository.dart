@@ -14,9 +14,13 @@ abstract class AuthRepository {
     required String password,
   });
   Future<void> signOut();
+  void dispose();
 }
 
 class FakeAuthRepository implements AuthRepository {
+  FakeAuthRepository({this.delay = const Duration(seconds: 1)});
+
+  final Duration delay;
   final _authStore = InMemoryStore<AppUser?>(null);
   @override
   Stream<AppUser?> authStateChanges() {
@@ -45,14 +49,12 @@ class FakeAuthRepository implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    if (currentUser == null) {
-      await _createNewUser(email: email, password: password);
-    }
+    await _createNewUser(email: email, password: password);
   }
 
   @override
   Future<void> signOut() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
+    await Future<void>.delayed(delay);
     _authStore.value = null;
   }
 
@@ -60,13 +62,14 @@ class FakeAuthRepository implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    await Future<void>.delayed(const Duration(seconds: 3));
+    await Future<void>.delayed(delay);
     _authStore.value = AppUser(
       uid: email.split('').reversed.join(''),
       email: email,
     );
   }
 
+  @override
   void dispose() {
     _authStore.dispose();
   }

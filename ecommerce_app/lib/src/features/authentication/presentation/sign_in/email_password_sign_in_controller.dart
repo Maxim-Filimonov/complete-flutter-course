@@ -32,7 +32,6 @@ class EmailPasswordSignInController
             email: email, password: password);
         break;
       default:
-        // TODO: implement
         throw Exception('Invalid form type');
     }
   }
